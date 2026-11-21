@@ -1,0 +1,333 @@
+<title>Microverse</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  /* Layout: an instrument console. A dark viewport into the field on the left,
+     the field's controls and readouts in a rail on the right; stacks on phones. */
+  :root {
+    --bg: #eceef4;
+    --panel: #f8f8fb;
+    --ink: #1c1930;
+    --muted: #5c5874;
+    --line: #d3d1e0;
+    --accent: #b4521a;      /* copper: electricity */
+    --accent-ink: #ffffff;
+    --field: #5a3fcf;       /* violet: the temporal field */
+    --good: #23805f;
+    --focus: #5a3fcf;
+    /* The viewport looks into the void, so the scene stays dark in both themes. */
+    --scene: #0b0918;
+    --scene-ink: #e6e1ff;
+    --scene-dust: #7b6fd6;
+    --scene-star: #ffd27a;
+    --scene-field: #8f78ff;
+    --scene-ocean-deep: #0d2440;
+    --scene-ocean: #1d5b86;
+    --scene-land-low: #3d6a3b;
+    --scene-land-high: #9b8a60;
+    --scene-peak: #d9d4c4;
+    --scene-ice: #dce8f2;
+    --scene-molten: #ff5a1f;
+    --scene-rock: #3a2c2a;
+    --scene-life: #3fd6a6;
+    --scene-mind: #ffe08a;
+    --scene-people: #fff3dc;
+    --scene-light: #ffbe5c;
+    /* Generation sources: mid-tones that read on both themes' panels. */
+    --src-hydro: #3d8fd1;
+    --src-combustion: #a8643a;
+    --src-wind: #4bae94;
+    --src-solar: #ddae33;
+    --font-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    --font-body: "IBM Plex Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+    --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --step--1: 0.78rem;
+    --step-0: 0.9rem;
+    --step-1: 1.08rem;
+    --step-2: 1.5rem;
+    --step-3: 2.1rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f0d1b;
+      --panel: #171428;
+      --ink: #ece9f8;
+      --muted: #a3a0bf;
+      --line: #2d2948;
+      --accent: #f0974d;
+      --accent-ink: #1b1206;
+      --field: #a18bff;
+      --good: #4fd1a0;
+      --focus: #a18bff;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f0d1b;
+    --panel: #171428;
+    --ink: #ece9f8;
+    --muted: #a3a0bf;
+    --line: #2d2948;
+    --accent: #f0974d;
+    --accent-ink: #1b1206;
+    --field: #a18bff;
+    --good: #4fd1a0;
+    --focus: #a18bff;
+    color-scheme: dark;
+  }
+
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    line-height: 1.45;
+  }
+  .console {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 21rem;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 12px 16px;
+    height: 100%;
+    box-sizing: border-box;
+    padding-block: 14px 16px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  header {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 20px;
+  }
+  .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; min-width: 0; }
+  h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-3);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .brand p { margin: 0; color: var(--muted); max-width: 46ch; text-wrap: balance; }
+  .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-left: auto; }
+
+  button, input[type="text"] {
+    font: inherit;
+    color: inherit;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    padding: 6px 11px;
+    min-height: 34px;
+    box-sizing: border-box;
+  }
+  button { cursor: pointer; font-weight: 500; }
+  button:hover:not(:disabled) { border-color: var(--muted); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  input[type="text"] { width: 9.5rem; font-family: var(--font-data); font-size: var(--step--1); }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; min-width: 2.6rem; font-family: var(--font-data); font-size: var(--step--1); }
+  .seg button + button { border-left: 1px solid var(--line); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+  label.inline { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+
+  .viewport {
+    position: relative;
+    min-width: 0;
+    min-height: 260px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--scene);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--scene-field) 35%, transparent);
+  }
+  .viewport canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
+  .view-tabs { position: absolute; top: 10px; left: 10px; display: flex; gap: 6px; }
+  .view-tabs button {
+    background: color-mix(in srgb, var(--scene) 70%, transparent);
+    color: var(--scene-ink);
+    border-color: color-mix(in srgb, var(--scene-ink) 25%, transparent);
+    font-size: var(--step--1);
+    min-height: 28px;
+    padding: 3px 10px;
+  }
+  .view-tabs button[aria-pressed="true"] { border-color: var(--scene-field); box-shadow: inset 0 0 0 1px var(--scene-field); }
+  .caption {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 10px;
+    color: var(--scene-ink);
+    font-family: var(--font-data);
+    font-size: var(--step--1);
+    text-shadow: 0 1px 2px var(--scene);
+    pointer-events: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: nowrap;
+  }
+  .caption span { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .caption span:last-child { opacity: 0.75; text-align: right; }
+  @media (max-width: 600px) {
+    .caption span:last-child { display: none; }
+  }
+
+  aside { display: flex; flex-direction: column; gap: 12px; min-width: 0; min-height: 0; overflow-y: auto; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .label {
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 0 0 6px;
+    font-weight: 600;
+  }
+  .gauge-value {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 700;
+    color: var(--field);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .gauge-value small { font-size: var(--step-0); color: var(--muted); font-weight: 500; font-family: var(--font-body); }
+  .meter { position: relative; height: 8px; margin: 10px 0 4px; border-radius: 4px; background: color-mix(in srgb, var(--field) 14%, var(--panel)); }
+  .meter i { position: absolute; inset: 0 auto 0 0; border-radius: 4px; background: var(--field); transition: width 120ms linear; }
+  .meter b { position: absolute; top: -3px; width: 2px; height: 14px; background: var(--ink); border-radius: 1px; }
+  .meter-scale { display: flex; justify-content: space-between; font-family: var(--font-data); font-size: 0.68rem; color: var(--muted); }
+  .clocks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .clocks div { min-width: 0; }
+  .clocks dt { font-size: var(--step--1); color: var(--muted); }
+  .clocks dd { margin: 0; font-family: var(--font-data); font-size: var(--step-0); font-variant-numeric: tabular-nums; }
+  .status { margin-top: 8px; font-size: var(--step--1); color: var(--muted); }
+
+  ol.phases { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+  ol.phases li {
+    font-size: var(--step--1);
+    line-height: 1.2;
+    padding: 5px 8px;
+    border-radius: 5px;
+    color: var(--muted);
+    background: color-mix(in srgb, var(--line) 45%, transparent);
+    min-width: 0;
+  }
+  ol.phases li .n { font-family: var(--font-data); opacity: 0.7; margin-right: 6px; }
+  ol.phases li.done { color: var(--ink); background: color-mix(in srgb, var(--field) 14%, transparent); }
+  ol.phases li.current { color: var(--accent-ink); background: var(--accent); }
+
+  dl.readout { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; }
+  dl.readout dt { color: var(--muted); }
+  dl.readout dd { margin: 0; text-align: right; font-family: var(--font-data); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .mix { display: flex; height: 10px; border-radius: 3px; overflow: hidden; margin-top: 10px; background: var(--line); }
+  .mix span { display: block; height: 100%; }
+  .mix-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; font-size: var(--step--1); color: var(--muted); }
+  .mix-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; }
+  canvas.spark { display: block; width: 100%; height: 48px; margin-top: 10px; }
+
+  .spark-card .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+  #introduce { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+  #introduce.ready { animation: ready 1.6s ease-in-out infinite; }
+  @keyframes ready { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 25%, transparent); } }
+  .hint { margin: 8px 0 0; color: var(--muted); font-size: var(--step--1); }
+
+  .log { flex: 1 0 auto; display: flex; flex-direction: column; }
+  .log ol { list-style: none; margin: 0; padding: 0; overflow-y: auto; max-height: 260px; }
+  .log li { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr); gap: 8px; padding: 5px 0; border-top: 1px solid var(--line); font-size: var(--step--1); }
+  .log li:first-child { border-top: 0; }
+  .log time { font-family: var(--font-data); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .log li.key span { color: var(--ink); font-weight: 600; }
+  .log li.key time { color: var(--accent); }
+
+  @media (max-width: 900px) {
+    .console { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; height: auto; }
+    aside { overflow: visible; }
+    .viewport { aspect-ratio: 16 / 10; min-height: 0; max-width: 100%; }
+    .controls { margin-left: 0; }
+    .log ol { max-height: 260px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #introduce.ready { animation: none; }
+    .meter i { transition: none; }
+  }
+</style>
+
+<div class="console">
+  <header>
+    <div class="brand">
+      <h1>Microverse</h1>
+      <p>A tessellated void sealed in a time-dilation field. It runs until a planet inside grows a mind, then you hand that mind electricity.</p>
+    </div>
+    <div class="controls">
+      <button id="toggle" type="button" aria-label="Pause">Pause</button>
+      <div class="seg" role="group" aria-label="Ticks per frame">
+        <button type="button" data-speed="1" aria-pressed="true">1×</button>
+        <button type="button" data-speed="4" aria-pressed="false">4×</button>
+        <button type="button" data-speed="16" aria-pressed="false">16×</button>
+      </div>
+      <input id="seed" type="text" spellcheck="false" autocomplete="off" aria-label="Seed">
+      <button id="restart" type="button">Restart</button>
+      <button id="fresh" type="button">New void</button>
+    </div>
+  </header>
+
+  <section class="viewport" aria-label="Microverse viewport">
+    <canvas id="scene"></canvas>
+    <div class="view-tabs" role="group" aria-label="View">
+      <button type="button" data-view="auto" aria-pressed="true">Follow</button>
+      <button type="button" data-view="void" aria-pressed="false">Void</button>
+      <button type="button" data-view="planet" aria-pressed="false">Planet</button>
+    </div>
+    <div class="caption"><span id="caption-left"></span><span id="caption-right"></span></div>
+  </section>
+
+  <aside>
+    <section class="card" aria-labelledby="field-label">
+      <h2 class="label" id="field-label">Temporal field</h2>
+      <div class="gauge-value" id="rate">0 <small>years per second</small></div>
+      <div class="meter" aria-hidden="true"><i id="meter-fill"></i><b id="meter-target"></b></div>
+      <div class="meter-scale" aria-hidden="true"><span>1 yr/s</span><span>1 kyr/s</span><span>1 Myr/s</span><span>1 Gyr/s</span></div>
+      <dl class="clocks">
+        <div><dt>Outside</dt><dd id="outside">0.0 s</dd></div>
+        <div><dt>Inside</dt><dd id="inside">0 years</dd></div>
+      </dl>
+      <div class="status" id="field-status">Spinning up</div>
+    </section>
+
+    <section class="card" aria-labelledby="phase-label">
+      <h2 class="label" id="phase-label">Phase</h2>
+      <ol class="phases" id="phases"></ol>
+    </section>
+
+    <section class="card" aria-labelledby="readout-label">
+      <h2 class="label" id="readout-label">Readout</h2>
+      <dl class="readout" id="readout"></dl>
+      <div id="power" hidden>
+        <div class="mix" id="mix"></div>
+        <div class="mix-legend" id="mix-legend"></div>
+        <canvas class="spark" id="spark" aria-label="Generating capacity since contact"></canvas>
+      </div>
+    </section>
+
+    <section class="card spark-card" aria-labelledby="spark-label">
+      <h2 class="label" id="spark-label">First contact</h2>
+      <div class="actions">
+        <button id="introduce" type="button" disabled>Introduce electricity</button>
+        <label class="inline"><input id="auto" type="checkbox" checked> Automatic</label>
+      </div>
+      <p class="hint" id="hint">Available once the planet has a civilization.</p>
+    </section>
+
+    <section class="card log" aria-labelledby="log-label">
+      <h2 class="label" id="log-label">Log</h2>
+      <ol id="log" aria-live="polite"></ol>
+    </section>
+  </aside>
+</div>
+
+<!-- BUNDLE -->
